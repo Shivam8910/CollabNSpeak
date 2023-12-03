@@ -1,4 +1,10 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import Appbar from "./Appbar";
+import BarCat from "./Components/BarCat";
+import VideoCall from "./Pages/VideoCall";
+import SignUp from "./Pages/SignUp";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
 
 const theme = createTheme({
   palette: {
@@ -56,7 +62,18 @@ const theme = createTheme({
 });
 
 function App() {
-  return <ThemeProvider theme={theme}></ThemeProvider>;
+
+ 
+  return( 
+  <>
+    <ThemeProvider theme={theme}>
+      <GoogleOAuthProvider>
+          <SignUp/>
+      </GoogleOAuthProvider>
+          
+    </ThemeProvider>
+  </>
+  )
 }
 
 export default App;
