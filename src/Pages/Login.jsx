@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
+
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -9,8 +9,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Helmet from 'react-helmet';
-import {styled,CardActions} from '@mui/material'
+import {styled} from '@mui/material'
 import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
+import { useContext } from 'react';
+import { AccountContext } from '../context/AccountProvider';
+import HomePage from './HomePage';
 
 const Page = styled(Container)` 
     Rectangle 4 */
@@ -45,9 +49,26 @@ const Forgot = styled(Box)`
 
 export default function SignIn() {
 
-  return (
+  const {setAccount} = useContext(AccountContext);
 
-    <>
+  const onLoginSuccess = (res)=>{
+    const decoded = jwtDecode(res.credential);
+    console.log(decoded);
+    setAccount(decoded);
+  }
+
+  const onLoginError = (res)=>{
+    console.log('Login failed',res);
+  }
+
+  const {account} = useContext(AccountContext);
+
+  return (
+    <Box>
+      {
+        account ? <HomePage/> :
+
+        <>
         <Helmet bodyAttributes={{style: 'background-color : #C8D8F0'}}/>
         <Page component="main">
         <CssBaseline />
@@ -102,7 +123,13 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <GoogleLogin sx={{}}/>
+            <Grid sx={{display:'flex', justifyContent:'center'}}>
+            <GoogleLogin 
+                onSuccess={onLoginSuccess}
+                onError={onLoginError}
+            />
+            </Grid>
+            
             <Grid item sx={{mt:7,  display: 'flex', justifyContent: 'center'}}>
                 <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
@@ -112,6 +139,10 @@ export default function SignIn() {
         </Box>
       </Page>
     </>
+
+      }
+    </Box>
+    
       
   );
 }

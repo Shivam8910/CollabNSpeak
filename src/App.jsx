@@ -1,4 +1,17 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+<<<<<<< Updated upstream
+=======
+import Login from "./Pages/Login";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import SignUp from "./Pages/SignUp";
+import HomePage from "./Pages/HomePage";
+import Desktop4 from "./Pages/ExistingSession";
+import CreateSession from "./Pages/CreateSession";
+import Profile from "./Pages/Profile";
+import AccountProvider from "./context/AccountProvider";
+
+>>>>>>> Stashed changes
 
 const theme = createTheme({
   palette: {
@@ -55,6 +68,52 @@ const theme = createTheme({
   },
 });
 
+<<<<<<< Updated upstream
+=======
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+
+      <AccountProvider>
+           <GoogleOAuthProvider clientId='857188781995-491222ua63co3flcgn8k8uacj2fc44ot.apps.googleusercontent.com'>
+              <Login />
+           </GoogleOAuthProvider>
+      </AccountProvider>
+
+     
+    ),
+  },
+  {
+    path: "/signup",
+    element: (
+      <AccountProvider>
+           <GoogleOAuthProvider clientId='857188781995-491222ua63co3flcgn8k8uacj2fc44ot.apps.googleusercontent.com'>
+               <SignUp />
+            </GoogleOAuthProvider>
+      </AccountProvider>
+   
+    ),
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
+  },
+  {
+    path: "/home",
+    element: <HomePage />,
+  },
+  {
+    path: "/existsession",
+    element: <Desktop4 />,
+  },
+  {
+    path: "/createsession",
+    element: <CreateSession />,
+  },
+]);
+
+>>>>>>> Stashed changes
 function App() {
   return <ThemeProvider theme={theme}></ThemeProvider>;
 }

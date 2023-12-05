@@ -10,6 +10,10 @@ import Container from '@mui/material/Container';
 import {styled,CardActions} from '@mui/material'
 import Helmet from 'react-helmet';
 import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
+import { useContext } from 'react';
+import { AccountContext } from '../context/AccountProvider';
+import HomePage from './HomePage';
 
 // import { GoogleLogin } from '@react-oauth/google';
 
@@ -42,6 +46,21 @@ const SigUpT = styled(Typography)`
 
 
 export default function SignUp() {
+
+  const {setAccount} = useContext(AccountContext);
+
+  const onLoginSuccess = (res)=>{
+    const decoded = jwtDecode(res.credential);
+    console.log(decoded);
+    setAccount(decoded);
+  }
+
+  const onLoginError = (res)=>{
+    console.log('Login failed',res);
+  }
+
+ 
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -50,97 +69,109 @@ export default function SignUp() {
       password: data.get('password'),
     });
   };
+  const {account} = useContext(AccountContext);
 
   return (
-    <>
-    <Helmet bodyAttributes={{style: 'background-color : #C8D8F0'}}/>
-  
-    <Page component="main">
-      <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          marginBottom: 2
-        }}
-      >
-        <SigUpT>
-          Sign up
-        </SigUpT>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 5 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="given-name"
-                name="firstName"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="family-name"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-              />
-            </Grid>
-            
-          </Grid>
-          <CardActions sx={{ justifyContent: "center" }}>
-            <Button
-                type="submit"
-                variant="contained"
-                sx={{ bgcolor: '#2D8CFF',borderRadius: '50px', mt: 3, mb: 2, width: '500px', height:'52px',textTransform:'initial'}}
-            >
-                Sign Up
-            </Button>
-          </CardActions>
-          
-          <Grid container justifyContent="center">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </Box>
-      </Box>
-      <Grid item xs={10}>
-              <GoogleLogin sx={{}}/>
-      </Grid>
-    </Page>
-  
+    <Box>
+      {
+           account ? <HomePage/> : 
+
+           <>
+         <Helmet bodyAttributes={{style: 'background-color : #C8D8F0'}}/>
+       
+         <Page component="main">
+           <CssBaseline />
+           <Box
+             sx={{
+               marginTop: 8,
+               display: 'flex',
+               flexDirection: 'column',
+               alignItems: 'center',
+               marginBottom: 2
+             }}
+           >
+             <SigUpT>
+               Sign up
+             </SigUpT>
+             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 5 }}>
+               <Grid container spacing={2}>
+                 <Grid item xs={12} sm={6}>
+                   <TextField
+                     autoComplete="given-name"
+                     name="firstName"
+                     required
+                     fullWidth
+                     id="firstName"
+                     label="First Name"
+                     autoFocus
+                   />
+                 </Grid>
+                 <Grid item xs={12} sm={6}>
+                   <TextField
+                     required
+                     fullWidth
+                     id="lastName"
+                     label="Last Name"
+                     name="lastName"
+                     autoComplete="family-name"
+                   />
+                 </Grid>
+                 <Grid item xs={12}>
+                   <TextField
+                     required
+                     fullWidth
+                     id="email"
+                     label="Email Address"
+                     name="email"
+                     autoComplete="email"
+                   />
+                 </Grid>
+                 <Grid item xs={12}>
+                   <TextField
+                     required
+                     fullWidth
+                     name="password"
+                     label="Password"
+                     type="password"
+                     id="password"
+                     autoComplete="new-password"
+                   />
+                 </Grid>
+                 
+               </Grid>
+               <CardActions sx={{ justifyContent: "center" }}>
+                 <Button
+                     type="submit"
+                     variant="contained"
+                     sx={{ bgcolor: '#2D8CFF',borderRadius: '50px', mt: 3, mb: 2, width: '500px', height:'52px',textTransform:'initial'}}
+                 >
+                     Sign Up
+                 </Button>
+               </CardActions>
+               
+               <Grid container justifyContent="center">
+                 <Grid item>
+                   <Link href="#" variant="body2">
+                     Already have an account? Sign in
+                   </Link>
+                 </Grid>
+               </Grid>
+             </Box>
+           </Box>
+           <Grid sx={{display:'flex', justifyContent:'center'}} >
+                   <GoogleLogin
+                    onSuccess={onLoginSuccess}
+                    onError={onLoginError}
+                  />
+           </Grid>
+         </Page>
+       
+         
+         </>
+      }
+     
+    </Box>
     
-    </>
    
   );
 }
